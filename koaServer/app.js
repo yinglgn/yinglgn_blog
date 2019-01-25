@@ -9,6 +9,7 @@ const passport = require(__dirname + '/config/passport_config')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
+const articles = require('./routes/articles')
 const category = require('./routes/category')
 const tag = require('./routes/tag')
 
@@ -50,11 +51,13 @@ app.use(passport.session())
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
+app.use(articles.routes(), articles.allowedMethods())
 app.use(category.routes(), category.allowedMethods())
 app.use(tag.routes(), tag.allowedMethods())
 
 //登录拦截器
 app.use( async(ctx, next) => {
+  console.info(ctx.isAuthenticated())
   if (ctx.isAuthenticated()) {
     next();
   }else {

@@ -8,18 +8,6 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    user_id: {
-      type: DataTypes.INTEGER(10),
-      allowNull: false
-    },
-    last_user_id: {
-      type: DataTypes.INTEGER(10),
-      allowNull: false
-    },
-    category_id: {
-      type: DataTypes.INTEGER(10),
-      allowNull: false
-    },
     title: {
       type: DataTypes.STRING(100),
       allowNull: false
@@ -32,11 +20,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    page_image: {
+    pageImage: {
       type: DataTypes.STRING(100),
       allowNull: true
     },
-    meta_description: {
+    metaDescription: {
       type: DataTypes.STRING(100),
       allowNull: true
     },
@@ -44,19 +32,19 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(1),
       allowNull: false
     },
-    is_original: {
+    isOriginal: {
       type: DataTypes.INTEGER(1),
       allowNull: false
     },
-    is_draft: {
+    isDraft: {
       type: DataTypes.INTEGER(1),
       allowNull: false
     },
-    view_count: {
+    viewCount: {
       type: DataTypes.INTEGER(10),
       allowNull: false
     },
-    published_at: {
+    publishedAt: {
       type: DataTypes.DATE,
       allowNull: true
     },

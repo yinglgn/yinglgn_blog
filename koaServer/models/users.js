@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    real_name: {
+    realName: {
       type: DataTypes.STRING(100),
       allowNull: true
     },
@@ -32,28 +32,28 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: '1'
     },
-    is_admin: {
+    isAdmin: {
       type: DataTypes.INTEGER(1),
       allowNull: false,
       defaultValue: '0'
     },
-    github_id: {
+    githubId: {
       type: DataTypes.INTEGER(11),
       allowNull: true
     },
-    github_name: {
+    githubName: {
       type: DataTypes.STRING(100),
       allowNull: true
     },
-    github_url: {
+    githubUrl: {
       type: DataTypes.STRING(100),
       allowNull: true
     },
-    weibo_name: {
+    weiboName: {
       type: DataTypes.STRING(100),
       allowNull: true
     },
-    weibo_link: {
+    weiboLink: {
       type: DataTypes.STRING(100),
       allowNull: true
     },
@@ -65,7 +65,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(100),
       allowNull: true
     },
-    email_notify_enabled: {
+    emailNotifyEnabled: {
       type: DataTypes.INTEGER(1),
       allowNull: false,
       defaultValue: '0'

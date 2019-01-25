@@ -9,9 +9,8 @@ passport.use(new LocalStrategy(
       where: {
         username: username
       },
-      attributes: ['id', 'username', 'password', 'real_name']
+      attributes: ['id', 'username', 'password']
     });
-    console.log(password)
     if (!user) {
       return done(null, false, { message: '未知用户' });
     }
