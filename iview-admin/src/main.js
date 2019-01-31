@@ -20,7 +20,9 @@ import 'v-org-tree/dist/v-org-tree.css'
 if (process.env.NODE_ENV !== 'production') require('@/mock')
 
 Vue.use(iView, {
-  i18n: (key, value) => i18n.t(key, value)
+  i18n: (key, value) => i18n.t(key, value),
+  transfer: true,
+  size: 'large'
 })
 Vue.use(TreeTable)
 Vue.use(VOrgTree)

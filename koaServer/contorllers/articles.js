@@ -34,10 +34,10 @@ const articlesInfo = {
     let result = resultAll;
     let query = url.parse(ctx.request.url).query;
     let params = querystring.parse(query);
-    let { currentPage = 1, size = 20, status = 1} = params;
+    let { page = 1, size = 20, status = 1} = params;
     let userResult = await articlesModel.findAndCountAll({
       limit: parseInt(size),
-      offset: (currentPage - 1) * size,
+      offset: (page - 1) * size,
       include: includes,
       where: {
         status,
@@ -91,8 +91,8 @@ const articlesInfo = {
     let params = ctx.request.body;
     params.userId = ctx.session.passport.user.id;
     let tranRes = await trantransaction( async (t) => {
-      let res = await articlesModel.create(params, {transaction: t});
-      await res.addTags(params.tag,{transaction: t})
+      let res = await articlesModel.create(params, { transaction: t });
+      await res.addTags(params.tag, { transaction: t })
     })
 
     if (!tranRes) {
@@ -129,7 +129,9 @@ const articlesInfo = {
         },
         transaction: t
       })
-      await articles.setTags(params.tag, {type: 'update', transaction: t })
+      await articles.setTags(params.tag, {
+        transaction: t
+      })
     })
 
     if (!tranRes) {

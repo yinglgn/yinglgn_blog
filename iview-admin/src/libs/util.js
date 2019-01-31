@@ -33,7 +33,10 @@ const showThisMenuEle = (item, access) => {
 export const getMenuByRouter = (list, access) => {
   let res = []
   forEach(list, item => {
-    if (!item.meta || (item.meta && !item.meta.hideInMenu)) {
+    if((item.meta && item.meta.isParent)) {
+      let arr = getMenuByRouter(item.children, access)
+      if (showThisMenuEle(item, access)) res = res.concat(arr)
+    } else if (!item.meta || (item.meta && !item.meta.hideInMenu )) {
       let obj = {
         icon: (item.meta && item.meta.icon) || '',
         name: item.name,
@@ -46,6 +49,7 @@ export const getMenuByRouter = (list, access) => {
       if (showThisMenuEle(item, access)) res.push(obj)
     }
   })
+  console.log(res)
   return res
 }
 
