@@ -2,6 +2,7 @@ const { usersModel, articlesModel, categoryModel, tagModel, trantransaction } = 
 const url = require('url')
 const querystring = require('querystring')
 const retCode = require('./../utils/retcode')
+const marked = require('marked')
 
 const resultAll = {
   code: retCode.Success,
@@ -90,6 +91,7 @@ const articlesInfo = {
     let result = resultAll;
     let params = ctx.request.body;
     params.userId = ctx.session.passport.user.id;
+    params.content = marked(params.markdownContent);
     let tranRes = await trantransaction( async (t) => {
       let res = await articlesModel.create(params, { transaction: t });
       await res.addTags(params.tag, { transaction: t })

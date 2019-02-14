@@ -1,6 +1,6 @@
 import axios from '@/libs/api.request'
 
-export const getArticleData = ( url = '' ) => {
+export const getArticle = ( url = '' ) => {
   return axios.request({
     url: `/articles${url}`,
     method: 'get'

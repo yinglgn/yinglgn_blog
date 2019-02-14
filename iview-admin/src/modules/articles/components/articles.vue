@@ -1,73 +1,121 @@
 <template>
-  <Form ref="loginForm" :model="form" :rules="rules" @keydown.enter.native="handleSubmit">
-    <FormItem prop="username">
-      <Input v-model="form.username" placeholder="请输入用户名">
-        <span slot="prepend">
-          <Icon :size="16" type="ios-person"></Icon>
-        </span>
-      </Input>
-    </FormItem>
-    <FormItem prop="password">
-      <Input type="password" v-model="form.password" placeholder="请输入密码">
-        <span slot="prepend">
-          <Icon :size="14" type="md-lock"></Icon>
-        </span>
-      </Input>
-    </FormItem>
-    <FormItem>
-      <Button @click="handleSubmit" type="primary" long>登录</Button>
-    </FormItem>
-  </Form>
+  <Row>
+    <Form ref="articleForm" :model="form" :rules="rules" :label-width="80">
+      <Col span="24">
+        <FormItem label="文章标题">
+          <Input v-model="form.title" placeholder="Enter something..."></Input>
+        </FormItem>
+      </Col>
+      <Col span="24">
+        <FormItem label="文章副标题">
+          <Input v-model="form.subtitle" placeholder="Enter something..."></Input>
+        </FormItem>
+      </Col>
+      <Col span="24">
+        <FormItem label="文章描述">
+          <Input v-model="form.metaDescription" placeholder="Enter something..."></Input>
+        </FormItem>
+      </Col>
+      <Col span="8">
+        <FormItem label="分类">
+          <Select v-model="form.categoryId">
+            <Option value="1">New York</Option>
+            <Option value="2">London</Option>
+            <Option value="3">Sydney</Option>
+          </Select>
+        </FormItem>
+      </Col>
+      <Col span="8">
+        <FormItem label="标签">
+          <Select v-model="form.select">
+            <Option value="1">New York</Option>
+            <Option value="2">London</Option>
+            <Option value="3">Sydney</Option>
+          </Select>
+        </FormItem>
+      </Col>
+      <Col span="8">
+        <FormItem label="是否原创">
+          <i-switch v-model="form.isOriginal" size="large">
+            <span slot="1">On</span>
+            <span slot="0">Off</span>
+          </i-switch>
+        </FormItem>
+      </Col>
+      <Col span="24">
+        <FormItem label="文章内容">
+          <markdown-editor v-model="form.markdownContent"/>
+        </FormItem>
+      </Col>
+      <Col span="24">
+        <Button type="info" style="margin-left: 8px" @click="handleSubmit()">新增</Button>
+      </Col>
+    </Form>
+  </Row>
 </template>
+
 <script>
-import md5 from 'md5'
-export default {
-  name: 'LoginForm',
-  props: {
-    usernameRules: {
-      type: Array,
-      default: () => {
-        return [
-          { required: true, message: '账号不能为空', trigger: 'blur' }
-        ]
+  import MarkdownEditor from '_c/markdown'
+  export default {
+    components: {
+      MarkdownEditor,
+    },
+    props: {
+      usernameRules: {
+        type: Array,
+        default: () => {
+          return [{
+            required: true,
+            message: '账号不能为空',
+            trigger: 'blur'
+          }]
+        }
+      },
+      passwordRules: {
+        type: Array,
+        default: () => {
+          return [{
+            required: true,
+            message: '密码不能为空',
+            trigger: 'blur'
+          }]
+        }
       }
     },
-    passwordRules: {
-      type: Array,
-      default: () => {
-        return [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
-        ]
-      }
-    }
-  },
-  data () {
-    return {
-      form: {
-        username: 'yinglgn',
-        password: ''
-      }
-    }
-  },
-  computed: {
-    rules () {
+    data() {
       return {
-        username: this.usernameRules,
-        password: this.passwordRules
+        form: {
+          categoryId: '',
+          title: '',
+          subtitle: '',
+          pageImage: null,
+          metaDescription: '',
+          status: 1,
+          isOriginal: 0,
+          isDraft: 0,
+          viewCount: 0,
+          tag: [],
+          markdownContent: ''
+        },
+        markdownContent: ''
       }
-    }
-  },
-  methods: {
-    handleSubmit () {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          this.$emit('on-success-valid', {
-            username: this.form.username,
-            password: md5(this.form.password)
-          })
+    },
+    computed: {
+      rules() {
+        return {
+          username: this.usernameRules,
+          password: this.passwordRules
         }
-      })
+      }
+    },
+    methods: {
+      handleSubmit() {
+        // this.$refs.articleForm.validate((valid) => {
+          // if (valid) {
+            this.$emit('on-sumbit', this.form)
+          // }
+        // })
+      }
     }
   }
-}
 </script>

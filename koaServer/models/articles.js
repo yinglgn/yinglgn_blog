@@ -16,6 +16,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(100),
       allowNull: false
     },
+    markdownContent: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
     content: {
       type: DataTypes.TEXT,
       allowNull: false

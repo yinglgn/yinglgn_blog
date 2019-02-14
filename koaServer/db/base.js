@@ -17,7 +17,7 @@ const trantransaction = (fun) => {
 }
 
 // 同步所有尚未在数据库中的模型
-// sequelize.sync()
+// sequelize.sync({ alter: true })
 
 // 强制同步所有模型
 // sequelize.sync({force: true})
