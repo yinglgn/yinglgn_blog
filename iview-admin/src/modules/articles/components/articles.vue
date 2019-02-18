@@ -61,25 +61,14 @@
       MarkdownEditor,
     },
     props: {
-      usernameRules: {
-        type: Array,
-        default: () => {
-          return [{
-            required: true,
-            message: '账号不能为空',
-            trigger: 'blur'
-          }]
-        }
-      },
-      passwordRules: {
-        type: Array,
-        default: () => {
-          return [{
-            required: true,
-            message: '密码不能为空',
-            trigger: 'blur'
-          }]
-        }
+      rows: {
+        type: Object,
+        default: () => ({})
+      }
+    },
+    computed: {
+      rows (newVal, oldVal) {
+        this.form = newVal
       }
     },
     data() {
@@ -97,7 +86,6 @@
           tag: [],
           markdownContent: ''
         },
-        markdownContent: ''
       }
     },
     computed: {

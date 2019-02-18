@@ -3,6 +3,9 @@ import App from "./App.vue";
 import router from "./router/index";
 import store from "./store";
 
+import 'bootstrap/dist/css/bootstrap.css'
+import 'font-awesome/css/font-awesome.css'
+
 Vue.config.productionTip = false;
 
 new Vue({
