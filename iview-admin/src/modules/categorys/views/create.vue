@@ -13,6 +13,7 @@ export default {
   methods: {
     add(obj) {
       addArticleData(obj).then(res => {
+        this.$Message.success("发布文章成功！！")
         jumpRouter(this.$router, 'articles_list')
       })
     },

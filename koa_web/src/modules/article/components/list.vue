@@ -1,19 +1,30 @@
 <template>
-  <div class="article row">
+  <div id="article" class="container row">
     <div class="col-md-10 offset-md-1">
       <ul class="list-unstyled">
-        <li class="media" v-for="(item, index) in dataList" :key="index">
-          <div data-src="https://user-gold-cdn.xitu.io/2019/1/16/16854d3cce53ce9c?imageView2/1/w/120/h/120/q/85/format/webp/interlace/1" class="thumbnail" style="background-image: url(&quot;https://user-gold-cdn.xitu.io/2019/1/16/16854d3cce53ce9c?imageView2/1/w/120/h/120/q/85/format/webp/interlace/1&quot;);/* background-size: cover; */"></div>
-          <div class="media-body text-left">
-            <div class="info">
-              <i class="fa fa-clock-o" aria-hidden="true"></i>
-              2017-20-50
-              <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-              yinglgn
-            </div>
-            <div class="media-heading">
-              <router-link :to="'/article/' + item.id" v-text="item.title"></router-link>
-            </div>
+        <li v-for="(item, index) in dataList" :key="index">
+          <h2>
+            <router-link :to="'/article/' + item.id">{{ item.title }}</router-link>
+          </h2>
+          <small>
+            <span class="date" v-text="item.createAt"></span>by
+            <span class="author" v-text="item.author"></span>
+            阅读 {{ item.viewcount }} 次
+          </small>
+          <div class="entry">
+            <img src="https://image.zhangxinxu.com/image/blog/201902/column-combin.png" width="161" height="100" alt="列选择符" class="pull-right">
+            <p v-text="item.metaDescription"></p>
+            <p>
+              <router-link :to="item.id">阅读全文...</router-link>
+            </p>
+          </div>
+          <div class="tag">
+            <span>标签：</span>
+            <router-link :to="item.id">col</router-link>
+          </div>
+          <div class="release">
+            <span>发布在&nbsp;&nbsp;</span>
+            <router-link :to="item.id">col</router-link>
           </div>
         </li>
       </ul>
@@ -28,7 +39,7 @@ export default {
     this.search();
   },
   methods: {
-    search({ currentPage = 1, pageSize = 20 } = {}) {
+    search({ currentPage = 1, pageSize = 10 } = {}) {
       this.currentPage = currentPage;
       this.pageSize = pageSize;
       let url = `?page=${currentPage}&size=${pageSize}`;
@@ -50,39 +61,29 @@ export default {
 </script>
 
 <style lang="scss">
-.article ul li.media {
-  display: flex;
-  align-items: center;
-  padding: 1.5rem 2rem;
-  .thumbnail {
-    position: relative;
-    flex: 0 0 auto;
-    width: 5rem;
-    height: 5rem;
-    margin-right: 2rem;
-    background-color: #fff;
-    border-radius: 2px;
-    background-position: 50%;
-    background-size: cover;
-    background-repeat: no-repeat;
-  }
-  .media-body {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-width: 0;
-    .media-heading {
-      margin: .5rem 0 1rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      > a {
-        color: #333;
-        font-weight: 700;
-        line-height: 1.2;
-        font-size: 1.4rem;
+#article {
+  ul li {
+    margin: 0 0 40px;
+    text-align: justify;
+    text-justify: inter-ideograph;
+    font-size: medium;
+    .entry {
+      padding: 5px 0;
+      line-height: 1.7;
+      font-size: medium;
+      > img {
+        padding: 4px;
+        margin: 0 0 2px 7px;
+        display: inline;
       }
+      p {
+        margin: 6px 0;
+        word-break: break-all;
+      }
+    }
+    .tag, .release {
+      padding-top: 5px;
+      font-size: 1.4rem;
     }
   }
 }

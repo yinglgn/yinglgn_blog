@@ -14,3 +14,10 @@ export const addArticleData = ( formData ) => {
     data: formData
   })
 }
+
+export const getArticleDetail = ( id ) => {
+  return axios.request({
+    url: `/articles/${id}`,
+    method: 'get'
+  })
+}

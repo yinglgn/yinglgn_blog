@@ -1,0 +1,31 @@
+html {
+  font-size: 16px;
+  font-family: -apple-system,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Arial,sans-serif;
+  text-rendering: optimizeLegibility;
+  color: #333;
+  background-color: #f4f5f5;
+}
+
+body, body a {
+  color: #333;
+}
+
+samll {
+  color: #777;
+}
+
+//文章
+#article {
+  h2, h3 {
+    font-family: x-locale-heading-primary,zillaslab,Palatino,"Palatino Linotype",x-locale-heading-secondary,'Source Han Serif SC', STZhongsong, "Source Han Sans CN", 'PingFang SC', 'Myriad Pro', 'Hiragino Sans GB', SimHei;
+  }
+  h2 {
+    margin: 40px auto 10px;
+    font-size: 2.5rem;
+    line-height: 1.25;
+    text-align: left;
+    a {
+      font-size: 2.4rem;
+    }
+  }
+}
