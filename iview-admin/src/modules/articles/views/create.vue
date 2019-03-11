@@ -1,5 +1,5 @@
 <template>
-  <articles-form @on-sumbit="add"></articles-form>
+  <articles-form @on-sumbit="goUrl" :form="form"></articles-form>
 </template>
 
 <script>
@@ -11,23 +11,19 @@ export default {
     ArticlesForm
   },
   methods: {
-    add(obj) {
-      addArticleData(obj).then(res => {
-        jumpRouter(this.$router, 'articles_list')
-      })
-    },
-    reset (params) {
-      console.log(params)
-    },
-    exportExcel () {
-      this.$refs.tables.exportCsv({
-        filename: `table-${(new Date()).valueOf()}.csv`
-      })
+    goUrl(name, id) {
+      jumpRouter(this.$router, name, id)
     }
   },
   data () {
     return {
-      content: ''
+      form: {
+        categoryId: '',
+        title: '',
+        metaDescription: '',
+        tag: [],
+        markdownContent: ''
+      },
     }
   }
 }

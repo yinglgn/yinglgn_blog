@@ -14,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     subtitle: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: true
     },
     markdownContent: {
       type: DataTypes.TEXT,

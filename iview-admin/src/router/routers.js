@@ -70,6 +70,17 @@ export default [
     },
     component: () => import('@/modules/articles/views/create.vue')
   },
+  {
+    path: '/editor/drafts/:id',
+    name: 'articles_edit',
+    meta: {
+      title: '文章修改',
+      // hideInBread: false,
+      // hideInMenu: true,
+      // notCache: true
+    },
+    component: () => import('@/modules/articles/views/edit.vue')
+  },
   // {
   //   path: '/',
   //   name: '_home',
@@ -141,36 +152,36 @@ export default [
       }
     ]
   },
-  {
-    path: '/articles',
-    name: 'articles',
-    component: Main,
-    meta: {
-      title: '文章管理'
-    },
-    children: [
-      {
-        path: 'articles_list',
-        name: 'articles_list',
-        meta: {
-          icon: 'md-grid',
-          title: '文章列表'
-        },
-        component: () => import('@/modules/articles/views/index.vue')
-      },
-      {
-        path: 'articles_add',
-        name: 'articles_add',
-        meta: {
-          title: '文章新增',
-          hideInBread: true,
-          hideInMenu: true,
-          // notCache: true
-        },
-        component: () => import('@/modules/articles/views/create.vue')
-      },
-    ]
-  },
+  // {
+  //   path: '/articles',
+  //   name: 'articles',
+  //   component: Main,
+  //   meta: {
+  //     title: '文章管理'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'articles_list',
+  //       name: 'articles_list',
+  //       meta: {
+  //         icon: 'md-grid',
+  //         title: '文章列表'
+  //       },
+  //       component: () => import('@/modules/articles/views/index.vue')
+  //     },
+  //     {
+  //       path: 'articles_add',
+  //       name: 'articles_add',
+  //       meta: {
+  //         title: '文章新增',
+  //         hideInBread: true,
+  //         hideInMenu: true,
+  //         // notCache: true
+  //       },
+  //       component: () => import('@/modules/articles/views/article.vue')
+  //     },
+  //   ]
+  // },
   {
     path: '/components',
     name: 'components',

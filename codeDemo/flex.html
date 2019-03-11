@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style type="scss">
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .flex {
+            display: flex;
+            /* max-width: 414px; */
+            flex-flow: row wrap;
+            justify-content: flex-start;
+            align-items: stretch;
+            align-content: flex-end;
+        }
+        .flex > div[data-index] {
+            background: radial-gradient(circle, #fff, #dbeafe 70%, #98c5fe);
+            position: relative;
+        }
+        .flex > div[data-index]::before {
+            content: attr(data-index);
+            background: red;
+            color: #fff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            text-align: center;
+            line-height: 20px;
+            top: 5px;
+        }
+        img {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <p id="flexDire">
+        <span>
+            <input type="radio" name="flexDirection" value="row">
+            <label>row</label>
+        </span>
+        <span>
+            <input type="radio" name="flexDirection" value="row-reverse">
+            <label>row-reverse</label>
+        </span>
+        <span>
+            <input type="radio" name="flexDirection" value="column">
+            <label>column</label>
+        </span>
+        <span>
+            <input type="radio" name="flexDirection" value="column-reverse">
+            <label>column-reverse</label>
+        </span>
+    </p>
+    <div id="flex" class="flex">
+        <div data-index="1">
+            <img src="https://image.zhangxinxu.com/image/study/s/s128/mm.jpg" srcset="//image.zhangxinxu.com/image/study/s/s256/mm.jpg 2x" alt="示意图片1" width="128" height="86">
+        </div>
+        <div data-index="2">
+            <img src="https://image.zhangxinxu.com/image/study/s/s128/mm2.jpg" srcset="//image.zhangxinxu.com/image/study/s/s256/mm2.jpg 2x" alt="示意图片2" width="96" height="128">
+        </div>
+        <div data-index="3">
+            <img src="https://image.zhangxinxu.com/image/study/s/s128/mm3.jpg" srcset="//image.zhangxinxu.com/image/study/s/s256/mm3.jpg 2x" alt="示意图片3" width="128" height="96">
+        </div>
+        <div data-index="4">
+            <img src="https://image.zhangxinxu.com/image/study/s/s128/mm3.jpg" srcset="//image.zhangxinxu.com/image/study/s/s256/mm3.jpg 2x" alt="示意图片3" width="128" height="96">
+        </div>
+    </div>
+    <script>
+        let flexDire = document.getElementById("flexDire");
+        let flex = document.getElementById("flex")
+        flexDire.addEventListener('click', function(e) {
+            flex.style.flexDirection = e.target.value;
+        }, false)
+    </script>
+</body>
+</html>

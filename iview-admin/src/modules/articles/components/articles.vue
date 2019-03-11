@@ -1,9 +1,12 @@
 <template>
   <section>
     <header class="markdown-editor">
-      <Input v-model="form.title" placeholder="输入文章标题..." />
+      <Input v-model="form.title" placeholder="输入文章标题..." @on-change="handleTitleChange"/>
       <div class="right-box">
-        <div title="最近保存于 2019/2/21 下午7:29:05" class="status-text" >
+        <div class="status-text" v-show="isSaveFlag">
+          保存中...
+        </div>
+        <div :title="'最近保存于 ' + draftTime" class="status-text" v-show="!isSaveFlag">
           已保存至<a href="/editor/drafts">草稿</a>
         </div>
         <div class="editor-draft" >
@@ -16,25 +19,25 @@
             <div class="category-box">
               <div class="sub-title">分类</div>
               <ul>
-                <li v-for="(item, index) in categorysList" :class="{'active': categoryIndex == index}" @click="handleCategory(index, item)">{{ item.name }}</li>
+                <li v-for="(item, index) in categorysList" :class="{'active': form.categoryId == item.id}" @click="handleCategory(index, item)">{{ item.name }}</li>
               </ul>
             </div>
             <div class="tag-box">
               <div class="sub-title">标签</div>
-              <ul v-if="tagsArr.length">
-                <li v-for="(item, index) in tagsArr" @click="handleTag(index, item)">{{ item.name }}</li>
+              <ul v-show="tagsArr.length">
+                <li v-for="(item, index) in tagsArr" @click="delTag(index, item)" class="tag-li active">{{ item.name }}</li>
               </ul>
-              <div class="tag-input" v-else>
-                <Input v-model="form.tagName" placeholder="添加1个标签" @on-change="handleInputChange" />
+              <div class="tag-input" v-show="!tagsArr.length">
+                <Input v-model="tagName" placeholder="添加1个标签" @on-change="handleInputChange" />
                 <ul>
-                  <li v-for="(item, index) in tagsList" @click="handleTags(item)">{{ item.name }}</li>
+                  <li v-for="(item, index) in tagsList" @click="handleTagChoose(item)">{{ item.name }}</li>
                 </ul>
               </div>
             </div>
             <Button @click="handleSubmit">确定并发布</Button>
           </div>
         </div>
-        <div class="user-avator-dropdown">
+        <!-- <div class="user-avator-dropdown">
           <Dropdown trigger="click"  @on-click="handleClick">
             <Badge :dot="!!messageUnreadCount">
               <Avatar :src="userAvator"/>
@@ -47,16 +50,18 @@
               <DropdownItem name="logout">退出登录</DropdownItem>
             </DropdownMenu>
           </Dropdown>
-        </div>
+        </div> -->
       </div>
     </header>
-    <markdown-editor v-model="form.markdownContent"/>
+    <div v-show="isLoading">
+      <markdown-editor v-model="form.markdownContent" @on-change="handleMarkdown"  />
+    </div>
   </section>
 </template>
 
 <script>
   import MarkdownEditor from '_c/markdown'
-  import { addArticleData } from '../api/articles'
+  import { addArticleData, editArticleData } from '../api/articles'
   import { getTagData } from '@@/tags/api/tags'
   import { getCategoryData } from '@@/categorys/api/categorys'
   import { debounce } from '@/libs/util'
@@ -65,78 +70,125 @@
       MarkdownEditor,
     },
     props: {
-      rows: {
+      form: {
         type: Object,
         default: () => ({})
       }
     },
-    computed: {
-      rows (newVal, oldVal) {
-        this.form = newVal
-      }
+    watch:{
+      "form.id": function(val, oldVal){
+        this.tagsArr = this.form.tags;
+        // localStorage.markdownContent = this.form.markdownContent;
+        this.isLoading = true;
+        this.draftTime = new Date(this.form.updatedAt).Format('yyyy-MM-dd hh:mm:ss');
+      },
     },
     mounted() {
       this.getCategorys();
-    },
-    data() {
-      return {
-        form: {
-          categoryId: '',
-          title: '',
-          subtitle: '',
-          pageImage: null,
-          metaDescription: '',
-          status: 1,
-          isOriginal: 0,
-          isDraft: 0,
-          viewCount: 0,
-          tag: [],
-          tagName: '',
-          markdownContent: ''
-        },
-        categorysList: [],
-        categoryIndex: null,
-        tagsList: [],
-        tagsArr: [],
-        isToggleDraft: false
+      if(!this.form.id) {
+        this.isLoading = true;
       }
     },
     methods: {
-      submitDraft() {
+      addDraft(obj) {
         addArticleData(obj).then(res => {
-          jumpRouter(this.$router, 'articles_list')
+          this.isSaveFlag = false;
+          this.$emit("on-sumbit", "articles_edit", res.data.data.id)
+        })
+      },
+      editDraft(obj) {
+        editArticleData(obj).then(res => {
+          this.isSaveFlag = false;
+          this.draftTime = new Date(res.data.updatedAt).Format('yyyy-MM-dd hh:mm:ss');
         })
       },
       handleSubmit() {
-        // this.$refs.articleForm.validate((valid) => {
-          // if (valid) {
-            this.$emit('on-sumbit', this.form)
-          // }
-        // })
+          if(!this.form.title) {
+            this.$Notice.error({
+              title: '请输入标题',
+            })
+            return false;
+          }
+          if(!this.form.categoryId) {
+            this.$Notice.error({
+              title: '请选择分类',
+            })
+            return false;
+          }
+          if(!this.form.tag.length) {
+            this.$Notice.error({
+              title: '请选择标签',
+            })
+            return false;
+          }
+          addArticleData(this.form).then(res => {
+            this.$emit('on-sumbit', 'articles_list')
+          })
       },
       getCategorys() {
         getCategoryData().then( res => {
           this.categorysList = res.data.data;
+          this.form.categoryId = this.categorysList[0].id;
         })
       },
       getTags() {
-        getTagData().then( res => {
+        let url = `?name=${this.tagName}`;
+        getTagData(url).then( res => {
           this.tagsList = res.data.data;
         })
       },
       handleCategory(index, item) {
-        this.categoryIndex = index;
         this.form.categoryId = item.id;
+        this.saveDraft();
       },
       handleToggleDraft() {
         this.isToggleDraft = !this.isToggleDraft;
       },
-      handleTags(item) {
+      handleTagChoose(item) {
         this.tagsArr = [];
         this.tagsArr.push(item)
+        this.form.tag.push(item.id);
+        this.saveDraft();
       },
-      handleInputChange() {
-        return debounce(getTagData, 100);
+      handleTitleChange() {
+        this.saveDraft();
+      },
+      handleMarkdown(item) {
+        console.log(item);
+      },
+      delTag() {
+        this.tagsArr = [];
+        this.form.tag = [];
+        this.saveDraft();
+      },
+      saveDraft() {
+        if(this.form.title) {
+          this.handleSaveDraft();
+        }
+      },
+      //防抖函数
+      handleInputChange: debounce(function() {
+        this.getTags();
+      }, 1000),
+      handleSaveDraft: debounce(function() {
+        this.isSaveFlag = true;
+        if(this.form.id) {
+          this.editDraft(this.form);
+        } else {
+          this.addDraft(this.form);
+        }
+      }, 3000),
+    },
+    data() {
+      return {
+        isLoading: false,
+        tagName: '',
+        categorysList: [],
+        tagsList: [],
+        tagsArr: [],
+        isToggleDraft: false,
+        draftTime: '',
+        isSaveFlag: false,
       }
     }
   }
@@ -302,6 +354,9 @@
                 }
               }
             }
+            .tag-li {
+              margin: 0 .45rem 0 0;
+            }
           }
           > button[type="button"] {
             display: block;
@@ -318,5 +373,9 @@
         }
       }
     }
+  }
+  .ivu-message {
+    z-index: 10001 !important;
+    top: 45% !important;
   }
 </style>

@@ -1,4 +1,4 @@
-const tagModel = require('./../db/base').tagModel
+const { Op, tagModel } = require('./../db/base')
 const url = require('url')
 const querystring = require('querystring')
 const retCode = require('./../utils/retcode')
@@ -21,10 +21,18 @@ const tagInfo = {
     let params = querystring.parse(query);
     let { currentPage = 1, size = 20, status = 1 } = params;
     let offset = (currentPage - 1) * size;
-    let userResult = await tagModel.findAndCountAll({
+    let obj = {
       limit: parseInt(size),
-      offset: offset
-    });
+      offset: offset,
+      where: {}
+    }
+    if(params.name) {
+      // 模糊查询
+      obj.where.name = {
+        [Op.like]: `%${params.name}%`
+      }
+    }
+    let userResult = await tagModel.findAndCountAll(obj);
 
     result.data = [];
     result.count = 0;

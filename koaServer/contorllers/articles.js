@@ -1,4 +1,4 @@
-const { usersModel, articlesModel, categoryModel, tagModel, trantransaction } = require('./../db/base')
+const { Op, usersModel, articlesModel, categoryModel, tagModel, trantransaction } = require('./../db/base')
 const url = require('url')
 const querystring = require('querystring')
 const retCode = require('./../utils/retcode')
@@ -12,7 +12,7 @@ const resultAll = {
 const includes = [
   {
     model: usersModel, // 关联查询
-    attributes: ['id', 'realName']
+    attributes: ['id', 'realName', 'avator']
   },
   {
     model: categoryModel, // 关联查询
@@ -36,7 +36,7 @@ const articlesInfo = {
     let query = url.parse(ctx.request.url).query;
     let params = querystring.parse(query);
     let { page = 1, size = 20, status = 1} = params;
-    let userResult = await articlesModel.findAndCountAll({
+    let obj = {
       limit: parseInt(size),
       offset: (page - 1) * size,
       include: includes,
@@ -44,7 +44,14 @@ const articlesInfo = {
         status,
       },
       distinct: true, //一个文章有多个tag，避免count不准确
-    });
+    }
+    if(params.title) {
+      // 模糊查询
+      obj.where.title = {
+        [Op.like]: `%${params.title}%`
+      }
+    }
+    let userResult = await articlesModel.findAndCountAll(obj);
 
     result.data = [];
     result.count = 0;
@@ -83,21 +90,27 @@ const articlesInfo = {
   },
 
   /**
-   * 新增数据
+   * 新增数据 ()
    * @param  {object} ctx   上下文
    * @return {object}       结果
    */
   async add(ctx) {
     let result = resultAll;
+    let options = {
+      status: 1,
+      isOriginal: 1,
+      isDraft: 1,
+      viewCount: 0
+    }
     let params = ctx.request.body;
-    params.userId = ctx.session.passport.user.id;
-    params.content = marked(params.markdownContent);
-    let tranRes = await trantransaction( async (t) => {
-      let res = await articlesModel.create(params, { transaction: t });
-      await res.addTags(params.tag, { transaction: t })
-    })
+    let obj = Object.assign(options, params);
+    obj.userId = ctx.session.passport.user.id;
+    obj.content = marked(obj.markdownContent);
+    //新增文章后返回数据，需要id
+    let res = await articlesModel.create(obj);
+    await res.addTags(obj.tag)
 
-    if (!tranRes) {
+    if (!res) {
       result.code = retCode.Fail;
       result.data = "新增失败！";
       ctx.status = 406;
@@ -105,6 +118,7 @@ const articlesInfo = {
     }
 
     ctx.status = 201;
+    result.data = res;
     return result;
   },
 
@@ -144,6 +158,7 @@ const articlesInfo = {
     }
 
     ctx.status = 202;
+    result.data = params;
     return result;
   },
 

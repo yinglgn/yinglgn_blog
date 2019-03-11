@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html, body {
+            font-size: 10px;
+            margin: 0;
+            padding: 0;
+        }
+        #backTop {
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: inline-block;
+            background: #ddd;
+            text-align: center;
+        }
+        .deed {
+            height: 2000px;
+            background: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="deed"></div>
+    <a href="#" id="backTop" hidden>返回顶部</a>
+    <script>
+        let windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        let backTopId = document.getElementById("backTop");
+        window.addEventListener("scroll", function() {
+            let scrollHeight = window.pageYOffset || document.documentElement.scrollTop;
+            console.log("滚动高度：" + scrollHeight);
+            console.log("窗口高度：" + windowHeight); 
+            if(scrollHeight > windowHeight) {
+                backTopId.style.visibility = "visible";
+            } else {
+                backTopId.style.visibility = "hidden";
+            }
+        }, false)
+    </script>
+</body>
+</html>

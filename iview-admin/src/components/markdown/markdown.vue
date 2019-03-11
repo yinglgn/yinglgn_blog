@@ -22,7 +22,13 @@ export default {
     },
     localCache: {
       type: Boolean,
-      default: true
+      default: false
+    }
+  },
+  watch: {
+    value(val) {
+      console.log(val)
+      this.editor.value(val)
     }
   },
   data () {
@@ -34,7 +40,7 @@ export default {
     addEvents () {
       this.editor.codemirror.on('change', () => {
         let value = this.editor.value()
-        if (this.localCache) localStorage.markdownContent = value
+        // if (this.localCache) localStorage.markdownContent = value
         this.$emit('input', value)
         this.$emit('on-change', value)
       })
@@ -62,7 +68,7 @@ export default {
      */
     this.addEvents()
     let content = localStorage.markdownContent
-    if (content) this.editor.value(content)
+    if (!content) this.editor.value(this.value)
   }
 }
 </script>

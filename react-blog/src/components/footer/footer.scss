@@ -1,0 +1,20 @@
+.footer-tab {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  line-height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 0 1px #ddd;
+  z-index: 100;
+  .tab-item {
+    flex: 1;
+    font-size: 22px;
+    cursor: pointer;
+  }
+}

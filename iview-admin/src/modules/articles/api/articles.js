@@ -7,10 +7,25 @@ export const getArticleData = ( url = '' ) => {
   })
 }
 
+export const getById = ( id ) => {
+  return axios.request({
+    url: `/articles/${id}`,
+    method: 'get'
+  })
+}
+
 export const addArticleData = ( formData ) => {
   return axios.request({
     url: `/articles`,
     method: 'post',
+    data: formData
+  })
+}
+
+export const editArticleData = ( formData ) => {
+  return axios.request({
+    url: `/articles`,
+    method: 'put',
     data: formData
   })
 }

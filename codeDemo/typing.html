@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>纯CSS实现打字动画效果</title>
+    <style>
+        html {
+            font-size: 10px;
+        }
+        .typing {
+            width: 30rem;
+            height: 1.3rem;
+            /* white-space: nowrap; */
+            word-break: break-all;
+            border-right: 2px solid transparent;
+            overflow: hidden;
+            font-family: Consolsa, Monaco;
+            animation: typing 5s steps(60, end), blink-caret .75s step-end infinite;
+            
+        }
+        /* 打印效果 */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 30rem;}
+        }
+        /* 光标闪啊闪 */
+        @keyframes blink-caret {
+            from, to { box-shadow:  1px 0 0 0 transparent; }
+            50% { box-shadow: 1px 0 0 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="typing">简易中文打字效果，作者：yinglgn 复制张鑫旭</div>
+</body>
+</html>

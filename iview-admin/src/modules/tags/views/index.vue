@@ -5,12 +5,12 @@
         <Row :gutter="10">
           <Col span="24" >
             <Col span="5">
-              <FormItem label="公众号名称" >
-                <Input v-model="formItem.wxName" placeholder="请输入公众号名称"></Input>
+              <FormItem label="名称" >
+                <Input v-model="formItem.name" placeholder="请输入名称"></Input>
               </FormItem>
             </Col>
             <Button type="primary" style="margin-left: 8px" @click="search">查询</Button>
-            <Button type="info" style="margin-left: 8px" @click="goUrl('articles_add')">新增</Button>
+            <Button type="info" style="margin-left: 8px" @click="showModal">新增</Button>
             <Button style="margin-left: 8px" @click="reset">重置</Button>
           </Col>
         </Row>
@@ -19,17 +19,18 @@
       <pages :total="total" :currentPage="currentPage" :pageSize="pageSize" @on-change="search" @on-page-size-change="search"></pages>
       <!-- <Button style="margin: 10px 0;" type="primary" @click="exportExcel">导出为Csv文件</Button> -->
     </Card>
+    <Modals :apiType="apiType"></Modals>
   </div>
 </template>
 
 <script>
 import Tables from '_c/tables'
-import { getArticleData } from '../api/articles'
+import { getTagData, delTag } from '../api/tags'
 import Pages from '@/components/pages'
+import Modals from '../components/modal';
 export default {
-  name: 'articles',
   components: {
-    Tables, Pages
+    Tables, Pages, Modals
   },
   created () {
     this.contentHeight = document.documentElement.clientHeight - 300;
@@ -42,7 +43,10 @@ export default {
       this.currentPage = currentPage;
       this.pageSize = pageSize;
       let url = `?page=${currentPage}&size=${pageSize}`
-      getArticleData(url).then(res => {
+      if(this.formItem.name) {
+        url += `&name=${encodeURI(this.formItem.name)}`
+      }
+      getTagData(url).then(res => {
         this.tableData = res.data.data
         this.total = res.data.count
       })
@@ -50,19 +54,31 @@ export default {
     reset (params) {
       console.log(params)
     },
-    exportExcel () {
-      this.$refs.tables.exportCsv({
-        filename: `table-${(new Date()).valueOf()}.csv`
+    close() {
+      this.modal1 = false;
+    },
+    showModal(flag = false) {
+      this.modal1 = true;
+      this.apiType = flag
+    },
+    delFunc(id) {
+      delTag(id).then(res => {
+        this.$Notice.success({
+          title: '删除标签成功！'
+        })
+        this.search();
       })
     }
   },
   data () {
     return {
       columns: [
-        {title: 'title', key: 'title', sortable: true},
-        {title: 'subtitle', key: 'subtitle'},
-        {title: 'metaDescription', key: 'metaDescription'},
-        {title: 'content', key: 'content'},
+        {
+          title: '序号',
+          width: 50,
+          type: 'index'
+        },
+        {title: '名称', key: 'name'},
         {
           title: 'Handle',
           key: 'handle',
@@ -74,8 +90,7 @@ export default {
               },
               on: {
                 'on-ok': () => {
-                  vm.$emit('on-delete', params)
-                  vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex))
+                  this.delFunc(params.row.id);
                 }
               }
             }, [
@@ -93,7 +108,20 @@ export default {
                   }
                 })
               ]),
-              h('Button', '自定义删除')
+              h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small'
+                }
+              }, [
+                h('Icon', {
+                  props: {
+                    type: 'md-create',
+                    size: 18,
+                    color: '#000000'
+                  }
+                })
+              ])
             ])
           }
         }
@@ -104,7 +132,9 @@ export default {
       contentHeight: '',
       total: 0,
       currentPage: 1,
-      pageSize: 20
+      pageSize: 20,
+      modal1: false,
+      apiType: null
     }
   }
 }

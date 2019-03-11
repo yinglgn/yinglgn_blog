@@ -1,4 +1,5 @@
 const sequelize = require('./index')
+const Op = sequelize.Op;
 const usersModel = sequelize.import('./../models/users.js')
 const articlesModel = sequelize.import('./../models/articles.js')
 const categoryModel = sequelize.import('./../models/category.js')
@@ -38,6 +39,7 @@ articlesModel.belongsTo(categoryModel)
 
 
 module.exports = {
+  Op, //模糊查询参数
   usersModel,
   articlesModel,
   categoryModel,
